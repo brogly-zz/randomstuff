@@ -67,7 +67,7 @@ Sub QuickSortMain()
     PartitionCalls = 0
 
     Dim thingsToSort As Variant
-    thingsToSort = SortSheet.range("A1:A42").Value
+    thingsToSort = SortSheet.range("A1:A7").Value
     
     Dim oneDArray As Variant
     ReDim oneDArray(1)
@@ -78,9 +78,19 @@ Sub QuickSortMain()
         oneDArray(UBound(oneDArray) - 1) = item
     Next item
     
-    oneDArray = QSort(oneDArray)
     
-    SortSheet.range("B1:B42").Value = WorksheetFunction.Transpose(oneDArray)
+    Dim startTime As Double
+    Dim finishTime As Double
+    Dim amtOfTime As Double
+
+    startTime = Timer
+    oneDArray = QSort(oneDArray)
+    finishTime = Timer
+    
+    amtOfTime = finishTime - startTime
+    Debug.Print amtOfTime & " seconds."
+    
+    SortSheet.range("B1:B7").Value = WorksheetFunction.Transpose(oneDArray)
     
     MsgBox "QSortCalls: " & QSortCalls
     MsgBox "PartitionCalls: " & PartitionCalls
@@ -144,11 +154,31 @@ Sub BogosortArray(ByVal amtOfNumbers)
 End Sub
 
 Sub BogosortFast()
+
+    Dim startTime As Double
+    Dim finishTime As Double
+    Dim amtOfTime As Double
+    
+    startTime = Timer
     BogosortArray 7
+    finishTime = Timer
+    
+    amtOfTime = finishTime - startTime
+    Debug.Print amtOfTime & " seconds."
+    
 End Sub
 
 Sub BogosortSlow()
+    Dim startTime As Double
+    Dim finishTime As Double
+    Dim amtOfTime As Double
+
+    startTime = Timer
     Bogosort 7
+    finishTime = Timer
+    
+    amtOfTime = finishTime - startTime
+    Debug.Print amtOfTime & " seconds."
 End Sub
 
 Sub RandomNumbers()
