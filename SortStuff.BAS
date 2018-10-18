@@ -1,7 +1,11 @@
 Attribute VB_Name = "SortStuff"
+'Sorting in VBA
+
 Public QSortCalls As Integer
 Public PartitionCalls As Integer
 
+'Partition is part of QuickSort which puts numbers into
+'a Less Than (L) Greater Than (G) or Equal (E) list.
 Sub Partition(ByRef lst As Variant, ByRef l As Variant, ByRef e As Variant, ByRef g As Variant)
     PartitionCalls = PartitionCalls + 1
     If UBound(lst) = 0 Or UBound(lst) = 1 Then Exit Sub
@@ -23,6 +27,7 @@ Sub Partition(ByRef lst As Variant, ByRef l As Variant, ByRef e As Variant, ByRe
     Next i
 End Sub
 
+'Main Quicksort Function
 Function QSort(ByRef lst As Variant) As Variant
     QSortCalls = QSortCalls + 1
     If UBound(lst) = 0 Or UBound(lst) = 1 Then
@@ -60,7 +65,7 @@ Function QSort(ByRef lst As Variant) As Variant
     
 End Function
 
-'Recursive Quick Sort
+'Recursive Quick Sort. Fast!
 'Seems to crash above 42 numbers. There could be a bug or the VBA Stack Space is very limited.
 Sub QuickSortMain()
     QSortCalls = 0
@@ -96,8 +101,12 @@ Sub QuickSortMain()
     MsgBox "PartitionCalls: " & PartitionCalls
 End Sub
 
-Sub Bogosort(ByVal amtOfNumbers As Integer)
+'Slow, because of the use of Cells
+Sub Bogosort(ByVal amtOfNumbers As Integer, Optional screenUpdating As Boolean = True)
     SortSheet.Activate
+    
+    Application.screenUpdating = screenUpdating
+    
     Dim position As Integer
     Dim sorted As Boolean
     sorted = False
@@ -122,6 +131,7 @@ Sub Bogosort(ByVal amtOfNumbers As Integer)
     Loop
 End Sub
 
+'Fast, because of the use of Arrays
 Sub BogosortArray(ByVal amtOfNumbers)
     Dim numArray As Variant
     numArray = SortSheet.range("A1:A" & amtOfNumbers).Value
@@ -153,6 +163,7 @@ Sub BogosortArray(ByVal amtOfNumbers)
     SortSheet.range("B1:B" & amtOfNumbers).Value = numArray
 End Sub
 
+'Bogosort, using Arrays (FAST!!!)
 Sub BogosortFast()
 
     Dim startTime As Double
@@ -168,19 +179,27 @@ Sub BogosortFast()
     
 End Sub
 
+'Sorting Speed Comparison:
+'Cells With Screen Updating (default): 5.6875 seconds.
+'Cells Without Screen Updating: 1.88671875 seconds.
+'Array (Screen Updating not relevant): 0.03125 seconds.
+'Quicksort (Screen Updating not relevant): 0 seconds.
+
+'Bogosort, using Cells (Slooooow...)
 Sub BogosortSlow()
     Dim startTime As Double
     Dim finishTime As Double
     Dim amtOfTime As Double
 
     startTime = Timer
-    Bogosort 7
+    Bogosort 7, False
     finishTime = Timer
     
     amtOfTime = finishTime - startTime
     Debug.Print amtOfTime & " seconds."
 End Sub
 
+'Make some Random numbers to test sorting algorithms
 Sub RandomNumbers()
     RandomAColumn 500, 7
 End Sub
